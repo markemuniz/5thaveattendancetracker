@@ -18,7 +18,8 @@
     --accent:#6c8cff;--accent-dim:#4a65c7;--accent-glow:rgba(108,140,255,0.12);
     --red:#ff6b7a;--green:#4ade80;--radius:10px;
   }
-  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+  html,body{height:100%}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow:hidden;display:flex;flex-direction:column}
   #loginView{min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
   .bg-glow{position:fixed;width:500px;height:500px;border-radius:50%;filter:blur(120px);opacity:0.07;pointer-events:none}
   .bg-glow-1{background:var(--accent);top:-200px;left:-100px}
@@ -44,15 +45,15 @@
   .login-btn:disabled{opacity:0.6;cursor:not-allowed;transform:none}
   .error-msg{text-align:center;color:var(--red);font-size:0.82rem;margin-top:16px;display:none;animation:shake 0.4s ease}
   @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
-  #appView{display:none}
+  #appView{display:none;flex-direction:column;flex:1;overflow:hidden}
   .store-badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:0.7rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.3);color:#a78bfa;margin-left:10px;vertical-align:middle}
-  .key-section{padding:12px 24px 8px;border-bottom:1px solid var(--border)}
+  .key-section{padding:12px 24px 8px;border-bottom:1px solid var(--border);flex-shrink:0}
   .key-title{font-size:0.7rem;font-weight:700;color:var(--text-muted);letter-spacing:0.04em;margin-bottom:8px}
   .key-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap;font-size:0.75rem;color:var(--text-dim)}
   .key-item{display:flex;align-items:center;gap:5px}
   .key-swatch{width:14px;height:14px;border-radius:3px;flex-shrink:0}
   .key-sep{width:1px;height:16px;background:var(--border)}
-  .toolbar{padding:10px 24px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+  .toolbar{padding:10px 24px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);flex-wrap:wrap;flex-shrink:0}
   .search-box{padding:7px 12px 7px 30px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.8rem;width:200px;outline:none;transition:border-color 0.15s;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%235c5f75' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.3-4.3'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:10px center}
   .search-box:focus{border-color:var(--accent)}
   .search-box::placeholder{color:var(--text-muted)}
@@ -75,7 +76,7 @@
   .header-dropdown{display:inline-flex;align-items:center;gap:4px;cursor:pointer;user-select:none}
   .header-dropdown::after{content:'▾';font-size:0.6rem;opacity:0.7}
   .header-dropdown:hover{color:var(--text-dim)}
-  .table-wrap{height:calc(100vh - 140px);overflow:auto}
+  .table-wrap{flex:1;overflow:auto}
   table{border-collapse:separate;border-spacing:0;width:max-content;min-width:100%;font-size:0.78rem}
   thead th{position:sticky;top:0;z-index:20;background:var(--surface);padding:10px 12px;text-align:left;font-weight:600;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);border-bottom:1px solid var(--border);border-right:1px solid rgba(46,49,70,0.35);white-space:nowrap}
   thead th:last-child{border-right:none}
@@ -152,6 +153,17 @@
   .toast.show{opacity:1;transform:translateY(0)}
   .toast.error{border-color:rgba(255,107,122,0.4)}
   .toast.success{border-color:rgba(74,222,128,0.4)}
+  /* Import log footer */
+  #importLog{flex-shrink:0;border-top:1px solid var(--border);background:var(--surface);padding:5px 24px;display:flex;align-items:flex-start;gap:10px;min-height:28px}
+  #importLog.log-empty{display:none}
+  .import-log-label{font-size:0.62rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;white-space:nowrap;flex-shrink:0;padding-top:3px}
+  #importLogEntries{display:flex;flex-direction:column;gap:3px;flex:1;overflow:hidden}
+  .import-log-entry{display:flex;align-items:center;gap:5px;white-space:nowrap;font-size:0.65rem;color:var(--text-muted);padding:1px 0}
+  .import-log-entry .log-num{font-size:0.6rem;color:var(--text-muted);font-weight:700;min-width:16px}
+  .import-log-entry .log-who{color:var(--accent);font-weight:600}
+  .import-log-entry .log-sep{color:var(--border-light);margin:0 1px}
+  .import-log-entry .log-del{margin-left:auto;background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:0.7rem;padding:0 2px;line-height:1;opacity:0.5;transition:opacity 0.15s}
+  .import-log-entry .log-del:hover{opacity:1;color:var(--red)}
   </style>
 </head>
 <body>
@@ -198,7 +210,7 @@
       <div class="key-item"><div class="key-swatch" style="background:#f59e0b"></div> Final</div>
       <div class="key-item"><div class="key-swatch" style="background:#ef4444"></div> Terminated</div>
       <div class="key-sep"></div>
-      <div class="key-item"><span style="color:#facc15;font-size:0.85rem">★</span> Has note</div>
+      <div class="key-item"><span style="color:#facc15;font-size:0.85rem">&#9733;</span> Has note</div>
     </div>
   </div>
   <div class="toolbar">
@@ -233,6 +245,11 @@
       <tbody id="tableBody"></tbody>
     </table>
   </div>
+  <!-- Import Log Footer -->
+  <div id="importLog" class="log-empty">
+    <span class="import-log-label">Imports</span>
+    <div id="importLogEntries"></div>
+  </div>
 </div>
 
 <div class="dropdown-menu" id="ptsColMenu" style="position:fixed;z-index:100">
@@ -265,7 +282,7 @@
     </div>
     <div style="margin-top:16px">
       <div class="note-label-row">
-        <div class="note-label"><span class="star-ico">★</span> Note</div>
+        <div class="note-label"><span class="star-ico">&#9733;</span> Note</div>
         <button class="btn" id="clearNoteBtn" onclick="clearUserNote()" style="font-size:0.68rem;padding:3px 8px">Clear note</button>
       </div>
       <textarea id="userNoteInput" class="note-input" placeholder="Add a note about this day (optional)"></textarea>
@@ -313,8 +330,73 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
-// *** 5th Ave store uses its own database path — completely separate from DTBK/Soho ***
 const dataRef = firebase.database().ref('attendance_5thave');
+const importLogRef = firebase.database().ref('importLog');
+
+let currentUserEmail = '';
+let importLogEntries = []; // sorted newest first
+
+// ── Import Log (Firebase-persisted, once() to avoid duplicate fires) ─────────
+function loadImportLog() {
+  importLogRef.once('value', snap => {
+    const data = snap.val();
+    if (!data) { importLogEntries = []; renderImportLog(); return; }
+    importLogEntries = Object.entries(data)
+      .map(([id, entry]) => ({ id, ...entry }))
+      .filter(e => e && e.ts && e.who && e.who !== 'undefined' && e.who !== 'unknown')
+      .sort((a, b) => b.ts - a.ts);
+    renderImportLog();
+  });
+}
+
+function logImport(count, dateRange) {
+  const now = new Date();
+  const mo = now.getMonth() + 1, dy = now.getDate(), yr = String(now.getFullYear()).slice(2);
+  const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+  const who = (currentUserEmail || '').split('@')[0] || '';
+  if (!who) return;
+  const entry = {
+    who,
+    count: count || 0,
+    dateRange: dateRange || '',
+    label: `${mo}/${dy}/${yr} ${timeStr}`,
+    ts: Date.now()
+  };
+  importLogRef.push(entry)
+    .then(() => loadImportLog())
+    .catch(err => console.error('Import log save failed:', err));
+}
+
+function renderImportLog() {
+  const logEl = document.getElementById('importLog');
+  const entriesEl = document.getElementById('importLogEntries');
+  if (!importLogEntries.length) { logEl.classList.add('log-empty'); return; }
+  logEl.classList.remove('log-empty');
+  entriesEl.innerHTML = importLogEntries.map((e, i) => {
+    const num = importLogEntries.length - i;
+    const rangeHtml = (e.dateRange && e.dateRange !== 'undefined')
+      ? `<span class="log-sep">&#183;</span><span style="color:var(--text-dim)">${e.dateRange}</span>`
+      : '';
+    const label = (e.label && e.label !== 'undefined') ? e.label : '';
+    return `<div class="import-log-entry">
+      <span class="log-num">${num}.</span>
+      <span class="log-who">${e.who}</span>
+      <span class="log-sep">&#183;</span>
+      <span>${e.count} budtenders</span>
+      ${rangeHtml}
+      ${label ? `<span class="log-sep">&#183;</span><span>${label}</span>` : ''}
+      <button class="log-del" onclick="deleteImportLog('${e.id}')" title="Remove">&#x2715;</button>
+    </div>`;
+  }).join('');
+}
+
+function deleteImportLog(id) {
+  if (!id) return;
+  importLogRef.child(id).remove().catch(err => console.error('Import log delete failed:', err));
+  importLogEntries = importLogEntries.filter(e => e.id !== id);
+  renderImportLog();
+}
+// ─────────────────────────────────────────────────────────────────────────────
 
 function togglePassword() {
   const i = document.getElementById('passwordInput');
@@ -355,12 +437,16 @@ function handleLock() {
 }
 function showApp() {
   document.getElementById('loginView').style.display = 'none';
-  document.getElementById('appView').style.display = 'block';
+  document.getElementById('appView').style.display = 'flex';
   loadData();
+  loadImportLog();
 }
 auth.onAuthStateChanged(user => {
-  if (user) { showApp(); }
-  else {
+  if (user) {
+    currentUserEmail = user.email || '';
+    showApp();
+  } else {
+    currentUserEmail = '';
     document.getElementById('loginView').style.display = 'flex';
     document.getElementById('appView').style.display = 'none';
     setTimeout(() => document.getElementById('emailInput').focus(), 100);
@@ -384,10 +470,7 @@ function loadData() {
     rebuildDates(); renderTable();
     if (initialLoad) {
       initialLoad = false;
-      setTimeout(() => {
-        const wrap = document.getElementById('tableWrap');
-        wrap.scrollLeft = wrap.scrollWidth;
-      }, 50);
+      setTimeout(() => { const wrap = document.getElementById('tableWrap'); wrap.scrollLeft = wrap.scrollWidth; }, 50);
     }
   }, err => {
     console.warn('Firebase error, using localStorage:', err.message);
@@ -395,10 +478,7 @@ function loadData() {
     rebuildDates(); renderTable();
     if (initialLoad) {
       initialLoad = false;
-      setTimeout(() => {
-        const wrap = document.getElementById('tableWrap');
-        wrap.scrollLeft = wrap.scrollWidth;
-      }, 50);
+      setTimeout(() => { const wrap = document.getElementById('tableWrap'); wrap.scrollLeft = wrap.scrollWidth; }, 50);
     }
   });
 }
@@ -638,15 +718,32 @@ function showPreview(parsed) {
 }
 function confirmImport() {
   if (!pendingImport) return;
-  Object.entries(pendingImport).forEach(([k,v]) => {
+  const snapshot = pendingImport;
+  const count = Object.keys(snapshot).length;
+
+  // Extract date range before anything clears pendingImport
+  const allImportDates = [];
+  Object.values(snapshot).forEach(p => { if (p.dates) Object.keys(p.dates).forEach(d => allImportDates.push(d)); });
+  allImportDates.sort();
+  let dateRange = '';
+  if (allImportDates.length) {
+    const fmt = ds => { const d = new Date(ds + 'T00:00:00'); return (d.getMonth()+1) + '/' + d.getDate(); };
+    const first = fmt(allImportDates[0]);
+    const last = fmt(allImportDates[allImportDates.length - 1]);
+    dateRange = first === last ? first : first + ' - ' + last;
+  }
+
+  Object.entries(snapshot).forEach(([k,v]) => {
     if (!attendanceData[k]) attendanceData[k] = { displayName: v.displayName, dates: {}, notes: {} };
     if (!attendanceData[k].dates) attendanceData[k].dates = {};
     if (!attendanceData[k].notes) attendanceData[k].notes = {};
     Object.assign(attendanceData[k].dates, v.dates);
     if (v.notes) Object.assign(attendanceData[k].notes, v.notes);
   });
+
   saveData(); rebuildDates(); renderTable(); closeImport();
-  toast(`Imported ${Object.keys(pendingImport).length} budtenders`, 'success');
+  logImport(count, dateRange);
+  toast('Imported ' + count + ' budtenders', 'success');
 }
 function rebuildDates() {
   const s = new Set();
@@ -680,15 +777,11 @@ function parseDate(dateStr) {
   const d=new Date(s); return isNaN(d)?null:d;
 }
 function getLast60Pts(dates) {
-  const today = new Date();
-  today.setHours(0,0,0,0);
-  const cutoff = new Date(today);
-  cutoff.setDate(cutoff.getDate() - 60);
+  const today = new Date(); today.setHours(0,0,0,0);
+  const cutoff = new Date(today); cutoff.setDate(cutoff.getDate() - 60);
   let pts = 0;
   Object.entries(dates).forEach(([d,v]) => {
-    const ed = parseDate(d);
-    if (!ed) return;
-    ed.setHours(0,0,0,0);
+    const ed = parseDate(d); if (!ed) return; ed.setHours(0,0,0,0);
     if (ed >= cutoff && ed <= today) pts += getPoints(v);
   });
   return pts;
@@ -728,8 +821,7 @@ function toggleShowHidden() {
 }
 function toggleHidePerson() {
   if (!editingPerson) return;
-  const p=attendanceData[editingPerson];
-  if (!p) return;
+  const p=attendanceData[editingPerson]; if (!p) return;
   const name=p.displayName||editingPerson;
   if (p.hidden) { p.hidden=false; toast(name+' is now visible','success'); }
   else { if (!confirm('Hide '+name+' from the tracker?')) return; p.hidden=true; toast(name+' hidden','success'); }
@@ -764,8 +856,7 @@ function getWeekKey(dateStr) {
 }
 function getMonthKey(dateStr) { return dateStr.substring(0,7); }
 function fmtWeek(weekKey) {
-  const d=new Date(weekKey+'T00:00:00'), end=new Date(d);
-  end.setDate(d.getDate()+6);
+  const d=new Date(weekKey+'T00:00:00'), end=new Date(d); end.setDate(d.getDate()+6);
   return (d.getMonth()+1)+'/'+d.getDate()+' - '+(end.getMonth()+1)+'/'+end.getDate();
 }
 function fmtMonth(monthKey) {
@@ -821,9 +912,9 @@ function renderTable() {
     const termed=isTerminated(dates), nc=getNameColor(dates,termed), wuTag=getWriteupTagHtml(dates);
     let cells;
     if (periodInfo) {
-      cells=filteredPeriods.map(p=>{ const pts=getPeriodPoints(dates,p,periodInfo.keyFn); const display=pts===0?'<span style="color:var(--text-muted)">·</span>':(pts%1===0?pts:pts.toFixed(1)); return `<td class="period-cell ${pts>0?ptsColor(pts):''}">${display}</td>`; }).join('');
+      cells=filteredPeriods.map(p=>{ const pts=getPeriodPoints(dates,p,periodInfo.keyFn); const display=pts===0?'<span style="color:var(--text-muted)">&#183;</span>':(pts%1===0?pts:pts.toFixed(1)); return `<td class="period-cell ${pts>0?ptsColor(pts):''}">${display}</td>`; }).join('');
     } else {
-      cells=filteredDates.map(d=>{ const v=dates[d]||''; const hasUserNote=!!(userNotes[d]&&userNotes[d].trim()); const starHtml=hasUserNote?'<span class="note-star">★</span>':''; const titleAttr=hasUserNote?` title="${(userNotes[d]||'').replace(/"/g,'&quot;')}"`:'' ; return `<td class="date-cell" onclick="openEdit('${key.replace(/'/g,"\\'")}','${d}')"${titleAttr}>${cellHtml(v)}${starHtml}</td>`; }).join('');
+      cells=filteredDates.map(d=>{ const v=dates[d]||''; const hasUserNote=!!(userNotes[d]&&userNotes[d].trim()); const starHtml=hasUserNote?'<span class="note-star">&#9733;</span>':''; const titleAttr=hasUserNote?` title="${(userNotes[d]||'').replace(/"/g,'&quot;')}"`:'' ; return `<td class="date-cell" onclick="openEdit('${key.replace(/'/g,"\\'")}','${d}')"${titleAttr}>${cellHtml(v)}${starHtml}</td>`; }).join('');
     }
     return `<tr><td><span class="name-badge ${nc}">${fn}</span></td><td><span class="name-badge ${nc}">${ln}</span>${wuTag}</td><td class="${ptsColor(mainPts)}">${mainPts>0?mainPts%1===0?mainPts:mainPts.toFixed(1):'0'}</td><td class="${ptsColor(wp)}">${wp>0?wp%1===0?wp:wp.toFixed(1):'0'}</td>${cells}</tr>`;
   }).join('');
@@ -836,7 +927,7 @@ function openEdit(pk,dt) {
   editingPerson=pk; editingDate=dt;
   const p=attendanceData[pk], name=p?(p.displayName||pk):pk;
   document.getElementById('editTitle').textContent='Edit Entry';
-  document.getElementById('editSubtitle').textContent=name+' — '+fmtDateLong(dt);
+  document.getElementById('editSubtitle').textContent=name+' \u2014 '+fmtDateLong(dt);
   const input=document.getElementById('editInput');
   input.value=(p&&p.dates&&p.dates[dt])?p.dates[dt]:'';
   const noteEl=document.getElementById('editNote'), note=(p&&p.notes&&p.notes[dt])?p.notes[dt]:'';

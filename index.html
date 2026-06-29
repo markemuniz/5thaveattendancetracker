@@ -153,17 +153,107 @@
   .toast.show{opacity:1;transform:translateY(0)}
   .toast.error{border-color:rgba(255,107,122,0.4)}
   .toast.success{border-color:rgba(74,222,128,0.4)}
-  /* Import log footer */
-  #importLog{flex-shrink:0;border-top:1px solid var(--border);background:var(--surface);padding:5px 24px;display:flex;align-items:flex-start;gap:10px;min-height:28px}
+
+  /* ── Import log footer ── */
+  #importLog{
+    flex-shrink:0;
+    border-top:1px solid var(--border);
+    background:var(--surface);
+    padding:5px 16px 5px 24px;
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    overflow:visible;
+  }
   #importLog.log-empty{display:none}
-  .import-log-label{font-size:0.62rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;white-space:nowrap;flex-shrink:0;padding-top:3px}
-  #importLogEntries{display:flex;flex-direction:column;gap:3px;flex:1;overflow:visible}
-  .import-log-entry{display:flex;align-items:center;gap:5px;white-space:nowrap;font-size:0.65rem;color:var(--text-muted);padding:1px 0}
-  .import-log-entry .log-num{font-size:0.6rem;color:var(--text-muted);font-weight:700;min-width:16px}
-  .import-log-entry .log-who{color:var(--accent);font-weight:600}
-  .import-log-entry .log-sep{color:var(--border-light);margin:0 1px}
-  .import-log-entry .log-del{margin-left:auto;background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:0.7rem;padding:0 2px;line-height:1;opacity:0.5;transition:opacity 0.15s}
-  .import-log-entry .log-del:hover{opacity:1;color:var(--red)}
+  .import-log-left{
+    display:flex;
+    flex-direction:column;
+    gap:3px;
+    flex-shrink:0;
+    padding-top:2px;
+  }
+  .import-log-label{
+    font-size:0.62rem;
+    font-weight:700;
+    color:var(--text-muted);
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    white-space:nowrap;
+    line-height:1;
+  }
+  .log-clear-all{
+    font-size:0.58rem;
+    font-weight:600;
+    color:var(--red);
+    background:none;
+    border:none;
+    cursor:pointer;
+    padding:0;
+    text-decoration:underline;
+    text-underline-offset:2px;
+    opacity:0.7;
+    transition:opacity 0.15s;
+    white-space:nowrap;
+    font-family:'DM Sans',sans-serif;
+    letter-spacing:0.02em;
+  }
+  .log-clear-all:hover{opacity:1}
+  #importLogEntries{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+    flex:1;
+    min-width:0;
+  }
+  .import-log-entry{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:0.65rem;
+    color:var(--text-muted);
+    padding:1px 0;
+    white-space:nowrap;
+  }
+  .import-log-entry .log-num{
+    font-size:0.6rem;
+    color:var(--text-muted);
+    font-weight:700;
+    flex-shrink:0;
+    min-width:14px;
+  }
+  .import-log-entry .log-del{
+    flex-shrink:0;
+    background:rgba(255,107,122,0.12);
+    border:1px solid rgba(255,107,122,0.4);
+    border-radius:4px;
+    color:var(--red);
+    cursor:pointer;
+    font-size:0.65rem;
+    padding:1px 7px;
+    line-height:1.5;
+    font-family:'DM Sans',sans-serif;
+    font-weight:700;
+    transition:all 0.15s;
+    white-space:nowrap;
+    letter-spacing:0.01em;
+  }
+  .import-log-entry .log-del:hover{
+    background:rgba(255,107,122,0.25);
+    border-color:rgba(255,107,122,0.7);
+  }
+  .import-log-entry .log-who{
+    color:var(--accent);
+    font-weight:600;
+    flex-shrink:0;
+  }
+  .import-log-entry .log-sep{
+    color:var(--border-light);
+    flex-shrink:0;
+  }
+  .import-log-entry .log-meta{
+    color:var(--text-dim);
+  }
   </style>
 </head>
 <body>
@@ -245,9 +335,13 @@
       <tbody id="tableBody"></tbody>
     </table>
   </div>
+
   <!-- Import Log Footer -->
   <div id="importLog" class="log-empty">
-    <span class="import-log-label">Imports</span>
+    <div class="import-log-left">
+      <span class="import-log-label">Imports</span>
+      <button class="log-clear-all" onclick="clearAllImportLog()">clear all</button>
+    </div>
     <div id="importLogEntries"></div>
   </div>
 </div>
@@ -336,7 +430,7 @@ const importLogRef = firebase.database().ref('importLog');
 let currentUserEmail = '';
 let importLogEntries = []; // sorted newest first
 
-// ── Import Log (Firebase-persisted, once() to avoid duplicate fires) ─────────
+// ── Import Log (Firebase-persisted) ─────────────────────────────────────────
 function loadImportLog() {
   importLogRef.once('value', snap => {
     const data = snap.val();
@@ -374,18 +468,17 @@ function renderImportLog() {
   logEl.classList.remove('log-empty');
   entriesEl.innerHTML = importLogEntries.map((e, i) => {
     const num = importLogEntries.length - i;
-    const rangeHtml = (e.dateRange && e.dateRange !== 'undefined')
-      ? `<span class="log-sep">&#183;</span><span style="color:var(--text-dim)">${e.dateRange}</span>`
-      : '';
-    const label = (e.label && e.label !== 'undefined') ? e.label : '';
+    const parts = [];
+    if (e.count) parts.push(`${e.count} budtenders`);
+    if (e.dateRange && e.dateRange !== 'undefined') parts.push(e.dateRange);
+    if (e.label && e.label !== 'undefined') parts.push(e.label);
+    const metaStr = parts.join(' &middot; ');
     return `<div class="import-log-entry">
       <span class="log-num">${num}.</span>
+      <button class="log-del" onclick="deleteImportLog('${e.id}')">&#x2715;</button>
       <span class="log-who">${e.who}</span>
-      <span class="log-sep">&#183;</span>
-      <span>${e.count} budtenders</span>
-      ${rangeHtml}
-      ${label ? `<span class="log-sep">&#183;</span><span>${label}</span>` : ''}
-      <button class="log-del" onclick="deleteImportLog('${e.id}')" title="Remove">&#x2715;</button>
+      <span class="log-sep">&middot;</span>
+      <span class="log-meta">${metaStr}</span>
     </div>`;
   }).join('');
 }
@@ -395,6 +488,16 @@ function deleteImportLog(id) {
   importLogRef.child(id).remove().catch(err => console.error('Import log delete failed:', err));
   importLogEntries = importLogEntries.filter(e => e.id !== id);
   renderImportLog();
+  toast('Import log entry removed', 'success');
+}
+
+function clearAllImportLog() {
+  if (!importLogEntries.length) return;
+  if (!confirm('Clear all import log entries? This cannot be undone.')) return;
+  importLogRef.remove().catch(err => console.error('Import log clear failed:', err));
+  importLogEntries = [];
+  renderImportLog();
+  toast('Import log cleared', 'success');
 }
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -721,7 +824,6 @@ function confirmImport() {
   const snapshot = pendingImport;
   const count = Object.keys(snapshot).length;
 
-  // Extract date range before anything clears pendingImport
   const allImportDates = [];
   Object.values(snapshot).forEach(p => { if (p.dates) Object.keys(p.dates).forEach(d => allImportDates.push(d)); });
   allImportDates.sort();
